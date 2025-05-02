@@ -1,0 +1,15 @@
+使用例↓↓
+
+import type { NextPage } from "next";
+import { getWindowSize } from "../hooks/GetWindowSize";
+
+const Home: NextPage = () => {
+  const { height, width } = getWindowSize();←ここね
+  return (
+    <div>
+      height:{height} width:{width}←ここね
+    </div>
+  );
+};
+
+export default Home;

@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  firebaseUid String  @unique 
+  email     String?   @unique
+  name      String?
+  portfolios Portfolio[] 
+}
+
+model Portfolio {
+  id            Int       @id @default(autoincrement())
+  userId        Int      
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String?
+  image         String?
+  introduction  String?
+  works         Work[]
+  skills        Skill[]
+}
+
+model Work {
+  id            Int       @id @default(autoincrement())
+  portfolio_id Int
+  url           String?
+  portfolio     Portfolio @relation(fields: [portfolio_id], references: [id])
+}
+
+model Skill {
+  id            Int       @id @default(autoincrement())
+  portfolio_id Int
+  category      String?
+  explanation   String?
+  portfolio     Portfolio   @relation(fields: [portfolio_id], references: [id])
+  skillDetails  SkillDetail[]
+}
+
+model SkillDetail {
+  id        Int     @id @default(autoincrement())
+  skill_id Int
+  lang      String?
+  star      Int?
+  years     String?
+  skill     Skill   @relation(fields: [skill_id], references: [id], onDelete: Cascade)
+}
